@@ -182,7 +182,7 @@ def main(high_score):
         pygame.display.update()
         
         if frame_count % 100 == 0 and framerate < 150:
-            framerate += 2
+            framerate += 4
         
     pygame.quit()
 
