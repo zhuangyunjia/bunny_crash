@@ -93,8 +93,10 @@ def game_over(high_score):
 
 def main(high_score):
     active = True
+    og_fps = 60
     framerate = 60
     frame_count = 0
+    velocity = 5
     
     chicken = pygame.Rect((SCREEN_WIDTH - bunny_width, 504, bunny_width, bunny_height))
     
@@ -107,8 +109,6 @@ def main(high_score):
     running = True
     while running:
         clock.tick(framerate)
-        velocity = 5
-        accel = 1
         
         WIN.fill(background)
         WIN.blit(back, (0, 0))
@@ -123,7 +123,7 @@ def main(high_score):
         press = pygame.key.get_pressed()
         
         # score
-        curr_score = frame_count // (framerate//6)
+        curr_score = frame_count // (og_fps//6) * (framerate//og_fps)
         display_curr_score(curr_score)
         display_high_score(high_score)
         
@@ -167,19 +167,18 @@ def main(high_score):
                 BLOCK0.y = -400
                 BLOCK0.x = lst_pos.pop(0)
             
-            BLOCK0.y += velocity * accel
-            BLOCK1.y += velocity * accel
-            BLOCK2.y += velocity * accel
-            BLOCK3.y += velocity * accel
+            BLOCK0.y += velocity
+            BLOCK1.y += velocity 
+            BLOCK2.y += velocity 
+            BLOCK3.y += velocity
     
         pygame.display.update()
         
-        if frame_count % 20 == 0:
-            accel *= 8
+        if frame_count % 100 == 0 and framerate < 150:
+            framerate += 2
         
     pygame.quit()
 
 
 if __name__ == "__main__":
     main(0)
-    
