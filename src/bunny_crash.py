@@ -68,16 +68,25 @@ def display_high_score(high_score):
     pygame.draw.rect(WIN, (128,128,128), high_score_background)
     WIN.blit(high_score_txt, (5,5))
     
-def game_over(high_score):    
+def game_over(score, high_score):
+    # game over text
     over_font = pygame.font.Font('freesansbold.ttf', 45)
     over_text = over_font.render("GAME OVER!", True, (54, 100, 139, 255))
     over_width = over_text.get_width()
     WIN.blit(over_text, ((SCREEN_WIDTH-over_width) / 2, 150))
     
+    # restart option text
     restart_font = pygame.font.Font('freesansbold.ttf', 20)
     restart_text = restart_font.render("Press (r) to restart or (c) to close", True, (54, 100, 139, 255))
     restart_width = restart_text.get_width()
     WIN.blit(restart_text, ((SCREEN_WIDTH-restart_width) / 2, 250))
+    
+    # high score text
+    if score >= high_score:
+        congrats_font = pygame.font.Font('freesansbold.ttf', 30)
+        congrats_text = congrats_font.render("NEW HIGH SCORE!!!", True, (177, 44, 222)) # (51, 246, 255)
+        congrats_width = congrats_text.get_width()
+        WIN.blit(congrats_text, ((SCREEN_WIDTH-congrats_width) / 2, 330))
     
     pygame.display.update()
     
@@ -85,10 +94,8 @@ def game_over(high_score):
     keys = pygame.key.get_pressed()
     if keys[pygame.K_r]:
         main(high_score)
-        return False
     elif keys[pygame.K_c]:
         pygame.quit()
-        return True
 
 
 def main(high_score):
@@ -142,7 +149,7 @@ def main(high_score):
         if chicken.colliderect(BLOCK0) or chicken.colliderect(BLOCK1) or chicken.colliderect(BLOCK2) or chicken.colliderect(BLOCK3) or not active:
             active = False
             accel = 1
-            game_over(high_score)
+            game_over(curr_score, high_score)
             
             # set best score if needed
             if curr_score > high_score:
