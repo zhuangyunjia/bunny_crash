@@ -5,23 +5,21 @@ from pygame.locals import *
 
 active = True
 
-#initialization of pygame
+# initialization of pygame
 pygame.init()
 
-#screen display
-
+# screen display
 SCREEN_WIDTH = 370
 SCREEN_HEIGHT = 760
 
 WIN = pygame.display.set_mode((370,760))
 pygame.display.set_caption('insert name')
 font = pygame.font.Font('freesansbold.ttf', 16)
-active = True
 
-FPS = 60
-
+# graphics
 # player 80, 80
 stone_image = pygame.image.load(os.path.join('stone.jpg')) #75, 130
+background = (153, 204, 255)
 #stone_image = pygame.transform.scale(stone, 0 , (75,90))
 
 LEFT_x, LEFT_y = 0,0 #1
@@ -32,19 +30,13 @@ right = 370-75
 # resize by BLOCK_LEFT = pygame.transform.scale(BLOCK,LEFT, (100,100))
 # rotate by .transform.rotate
 
-lst_tiles = []
 lst_pos = []
-
 n = 999
 
 for i in range(n):
-    lst_tiles.append(random.randint(1,2))
-
-for i in range(len(lst_tiles)-1):
-    if lst_tiles[i] == 1:
+    if random.randint(1,2) == 1:
         lst_pos.append(left)
-        
-    elif lst_tiles[i] == 2:
+    else:
         lst_pos.append(right)
     
         
@@ -65,7 +57,6 @@ def game_over(high_score):
         return True
 
 
-
 def main(high_score):
     active = True
     framerate = 60
@@ -79,12 +70,11 @@ def main(high_score):
     BLOCK3 = pygame.Rect(0, -900, 75, 130)
     
     clock = pygame.time.Clock()
-    run = True
-    while run:
-        
+    running = True
+    while running:
         clock.tick(framerate)
         
-        WIN.fill((153, 204, 255))
+        WIN.fill(background)
         
         WIN.blit(stone_image, (BLOCK0.x, BLOCK0.y))
         WIN.blit(stone_image, (BLOCK1.x, BLOCK1.y))
@@ -120,16 +110,14 @@ def main(high_score):
 
         frame_count += 1    
         
-        
         # event handler
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                running = False
                 active = False
             if event.type == pygame.KEYUP:   
                 if event.key == pygame.K_j and chicken.x == 290 and active:
                     chicken.move_ip(-290, 0)
-
                 elif event.key == pygame.K_l and chicken.x == 0 and active:
                     chicken.move_ip(290, 0)  
         
@@ -169,7 +157,6 @@ def main(high_score):
         pygame.display.update()
         
     pygame.quit()
-
 
 
 if __name__ == "__main__":
