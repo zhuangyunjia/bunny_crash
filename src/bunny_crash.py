@@ -12,7 +12,7 @@ SCREEN_WIDTH = 370
 SCREEN_HEIGHT = 760
 
 WIN = pygame.display.set_mode((370,760))
-pygame.display.set_caption('insert name')
+pygame.display.set_caption('Bunny Crash')
 font = pygame.font.Font('freesansbold.ttf', 16)
 
 # graphics
