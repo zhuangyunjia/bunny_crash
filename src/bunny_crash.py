@@ -3,7 +3,6 @@ import random
 import os
 from pygame.locals import *
 
-active = True
 
 # initialization of pygame
 pygame.init()
@@ -20,20 +19,22 @@ font = pygame.font.Font('freesansbold.ttf', 16)
 # player 80, 80
 stone_image = pygame.image.load(os.path.join('stone.jpg')) #75, 130
 bunny_image = pygame.image.load(os.path.join('bun.png')) #65, 120
+bunny_width = 65
+bunny_height = 120
+
 background = (153, 204, 255)
 back = pygame.image.load(os.path.join('easter.jpg')) 
-#stone_image = pygame.transform.scale(stone, 0 , (75,90))
 
-LEFT_x, LEFT_y = 0,0 #1
-RIGHT_x, RIGHT_y = (370-75), 0 #2
 left = 0
-right = 370-75
+right = SCREEN_WIDTH-75
+LEFT_x, LEFT_y = 0,0 #1
+RIGHT_x, RIGHT_y = right, 0 #2
 
 # resize by BLOCK_LEFT = pygame.transform.scale(BLOCK,LEFT, (100,100))
 # rotate by .transform.rotate
 
 lst_pos = []
-n = 999
+n = 9999
 
 for i in range(n):
     if random.randint(1,2) == 1:
@@ -41,15 +42,43 @@ for i in range(n):
     else:
         lst_pos.append(right)
     
-        
-def game_over(high_score):
+def display_curr_score(curr_score):
+    score_txt = font.render(f"{curr_score} m", True, (255, 255, 255))
+    
+    # set up background for score
+    score_width = score_txt.get_width()
+    score_height = score_txt.get_height()
+    score_background = pygame.Rect((SCREEN_WIDTH-score_width)/2-10, 3*score_height-5, score_width+20, score_height+10)
+    
+    # display score and background
+    pygame.draw.rect(WIN, (128,128,128), score_background)
+    WIN.blit(score_txt, ((SCREEN_WIDTH-score_width) / 2, 3 * score_height))
+
+    
+def display_high_score(high_score):
+    high_score_txt = font.render(f"HIGH SCORE: {high_score}", True, (255, 255, 255))
+    high_score_width = high_score_txt.get_width()
+    high_score_height = high_score_txt.get_height()
+    high_score_background = pygame.Rect(0, 0, high_score_width+10, high_score_height+10)
+    
+    # display high score and background
+    pygame.draw.rect(WIN, (128,128,128), high_score_background)
+    WIN.blit(high_score_txt, (5,5))
+    
+def game_over(high_score):    
     over_font = pygame.font.Font('freesansbold.ttf', 45)
     over_text = over_font.render("GAME OVER!", True, (54, 100, 139, 255))
-    WIN.blit(over_text, (15, 150))
+    over_width = over_text.get_width()
+    WIN.blit(over_text, ((SCREEN_WIDTH-over_width) / 2, 150))
     
     restart_font = pygame.font.Font('freesansbold.ttf', 20)
-    restart_text = restart_font.render("Press (r) to restart or (c) to exit", True, (54, 100, 139, 255))
-    WIN.blit(restart_text, (25,250))
+    restart_text = restart_font.render("Press (r) to restart or (c) to close", True, (54, 100, 139, 255))
+    restart_width = restart_text.get_width()
+    WIN.blit(restart_text, ((SCREEN_WIDTH-restart_width) / 2, 250))
+    
+    pygame.display.update()
+    
+    # check if restarting game
     keys = pygame.key.get_pressed()
     if keys[pygame.K_r]:
         main(high_score)
@@ -64,7 +93,7 @@ def main(high_score):
     framerate = 60
     frame_count = 0
     
-    chicken = pygame.Rect((290, 504, 65, 120))
+    chicken = pygame.Rect((SCREEN_WIDTH - bunny_width, 504, bunny_width, bunny_height))
     
     BLOCK0 = pygame.Rect(0, -10, 75, 130)
     BLOCK1 = pygame.Rect(0, -300, 75, 130)
@@ -84,34 +113,14 @@ def main(high_score):
         WIN.blit(stone_image, (BLOCK3.x, BLOCK3.y))
         
         # player
-        pygame.draw.rect(WIN, (0, 250, 200), chicken)
+        #pygame.draw.rect(WIN, (0, 250, 200), chicken, 1)
         WIN.blit(bunny_image, (chicken.x, chicken.y))
         press = pygame.key.get_pressed()
         
         # score
-        curr_score = frame_count // (framerate//6) # 
-        score_txt = font.render(f"{curr_score} m", True, (255, 255, 255))
-        
-        # set up background for score
-        score_width = score_txt.get_width()
-        score_height = score_txt.get_height()
-        score_background = pygame.Rect((SCREEN_WIDTH-score_width)/2-10, 3*score_height-5, score_width+20, score_height+10)
-        
-        # display score and background
-        pygame.draw.rect(WIN, (128,128,128), score_background)
-        WIN.blit(score_txt, ((SCREEN_WIDTH-score_width) / 2, 3 * score_height))
-        
-        # high score
-        high_score_txt = font.render(f"HIGH SCORE: {high_score}", True, (255, 255, 255))
-        high_score_width = high_score_txt.get_width()
-        high_score_height = high_score_txt.get_height()
-        high_score_background = pygame.Rect(0, 0, high_score_width+10, high_score_height+10)
-        
-        # display high score and background
-        pygame.draw.rect(WIN, (128,128,128), high_score_background)
-        WIN.blit(high_score_txt, (5,5))
-
-        frame_count += 1    
+        curr_score = frame_count // (framerate//6)
+        display_curr_score(curr_score)
+        display_high_score(high_score)
         
         # event handler
         for event in pygame.event.get():
@@ -119,23 +128,24 @@ def main(high_score):
                 running = False
                 active = False
             if event.type == pygame.KEYUP:   
-                if event.key == pygame.K_j and chicken.x == 290 and active:
-                    chicken.move_ip(-290, 0)
+                if event.key == pygame.K_j and chicken.x == SCREEN_WIDTH - bunny_width and active:
+                    chicken.move_ip(-(SCREEN_WIDTH - bunny_width), 0)
                 elif event.key == pygame.K_l and chicken.x == 0 and active:
-                    chicken.move_ip(290, 0)  
+                    chicken.move_ip(SCREEN_WIDTH - bunny_width, 0)  
         
         # events
         if chicken.colliderect(BLOCK0) or chicken.colliderect(BLOCK1) or chicken.colliderect(BLOCK2) or chicken.colliderect(BLOCK3) or not active:
             active = False
+            
             game_over(high_score)
-
-            # reset score
-            frame_count = 0
+            
             # set best score if needed
             if curr_score > high_score:
                 high_score = curr_score
+            
         
         if active:
+            frame_count += 1
             if (BLOCK0.y == 0):
                 BLOCK1.y = -400
                 BLOCK1.x = lst_pos.pop(0)
