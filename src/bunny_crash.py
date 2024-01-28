@@ -16,16 +16,20 @@ pygame.display.set_caption('insert name')
 font = pygame.font.Font('freesansbold.ttf', 16)
 
 # graphics
-stone_image = pygame.image.load(os.path.join('./assets/stone.jpg')) #75, 130
 bunny_image = pygame.image.load(os.path.join('./assets/bun.png')) #65, 120
 bunny_width = 65
 bunny_height = 120
+
+egg0 = pygame.image.load(os.path.join('./assets/egg0.png')) #90, 120
+egg1 = pygame.image.load(os.path.join('./assets/egg1.png'))
+egg2 = pygame.image.load(os.path.join('./assets/egg2.png'))
+egg3 = pygame.image.load(os.path.join('./assets/egg3.png'))
 
 background = (153, 204, 255)
 back = pygame.image.load(os.path.join('./assets/easter.jpg')) 
 
 left = 0
-right = SCREEN_WIDTH-75
+right = SCREEN_WIDTH-90
 LEFT_x, LEFT_y = 0,0 #1
 RIGHT_x, RIGHT_y = right, 0 #2
 
@@ -94,10 +98,10 @@ def main(high_score):
     
     chicken = pygame.Rect((SCREEN_WIDTH - bunny_width, 504, bunny_width, bunny_height))
     
-    BLOCK0 = pygame.Rect(0, -10, 75, 130)
-    BLOCK1 = pygame.Rect(0, -300, 75, 130)
-    BLOCK2 = pygame.Rect(0, -600, 75, 130)
-    BLOCK3 = pygame.Rect(0, -900, 75, 130)
+    BLOCK0 = pygame.Rect(0, -10, 90, 120)
+    BLOCK1 = pygame.Rect(0, -300, 90, 120)
+    BLOCK2 = pygame.Rect(0, -600, 90, 120)
+    BLOCK3 = pygame.Rect(0, -900, 90, 120)
     
     clock = pygame.time.Clock()
     running = True
@@ -108,10 +112,10 @@ def main(high_score):
         
         WIN.fill(background)
         WIN.blit(back, (0, 0))
-        WIN.blit(stone_image, (BLOCK0.x, BLOCK0.y))
-        WIN.blit(stone_image, (BLOCK1.x, BLOCK1.y))
-        WIN.blit(stone_image, (BLOCK2.x, BLOCK2.y))
-        WIN.blit(stone_image, (BLOCK3.x, BLOCK3.y))
+        WIN.blit(egg0, (BLOCK0.x, BLOCK0.y))
+        WIN.blit(egg1, (BLOCK1.x, BLOCK1.y))
+        WIN.blit(egg2, (BLOCK2.x, BLOCK2.y))
+        WIN.blit(egg3, (BLOCK3.x, BLOCK3.y))
         
         # player
         #pygame.draw.rect(WIN, (0, 250, 200), chicken, 1)
@@ -171,10 +175,11 @@ def main(high_score):
         pygame.display.update()
         
         if frame_count % 20 == 0:
-            accel *= 2
+            accel *= 8
         
     pygame.quit()
 
 
 if __name__ == "__main__":
     main(0)
+    
