@@ -16,14 +16,13 @@ pygame.display.set_caption('insert name')
 font = pygame.font.Font('freesansbold.ttf', 16)
 
 # graphics
-# player 80, 80
-stone_image = pygame.image.load(os.path.join('stone.jpg')) #75, 130
-bunny_image = pygame.image.load(os.path.join('bun.png')) #65, 120
+stone_image = pygame.image.load(os.path.join('./assets/stone.jpg')) #75, 130
+bunny_image = pygame.image.load(os.path.join('./assets/bun.png')) #65, 120
 bunny_width = 65
 bunny_height = 120
 
 background = (153, 204, 255)
-back = pygame.image.load(os.path.join('easter.jpg')) 
+back = pygame.image.load(os.path.join('./assets/easter.jpg')) 
 
 left = 0
 right = SCREEN_WIDTH-75
@@ -104,6 +103,8 @@ def main(high_score):
     running = True
     while running:
         clock.tick(framerate)
+        velocity = 5
+        accel = 1
         
         WIN.fill(background)
         WIN.blit(back, (0, 0))
@@ -128,15 +129,15 @@ def main(high_score):
                 running = False
                 active = False
             if event.type == pygame.KEYUP:   
-                if event.key == pygame.K_j and chicken.x == SCREEN_WIDTH - bunny_width and active:
+                if event.key == pygame.K_LEFT and chicken.x == SCREEN_WIDTH - bunny_width and active:
                     chicken.move_ip(-(SCREEN_WIDTH - bunny_width), 0)
-                elif event.key == pygame.K_l and chicken.x == 0 and active:
+                elif event.key == pygame.K_RIGHT and chicken.x == 0 and active:
                     chicken.move_ip(SCREEN_WIDTH - bunny_width, 0)  
         
         # events
         if chicken.colliderect(BLOCK0) or chicken.colliderect(BLOCK1) or chicken.colliderect(BLOCK2) or chicken.colliderect(BLOCK3) or not active:
             active = False
-            
+            accel = 1
             game_over(high_score)
             
             # set best score if needed
@@ -162,12 +163,15 @@ def main(high_score):
                 BLOCK0.y = -400
                 BLOCK0.x = lst_pos.pop(0)
             
-            BLOCK0.y += 5
-            BLOCK1.y += 5
-            BLOCK2.y += 5
-            BLOCK3.y += 5
-
+            BLOCK0.y += velocity * accel
+            BLOCK1.y += velocity * accel
+            BLOCK2.y += velocity * accel
+            BLOCK3.y += velocity * accel
+    
         pygame.display.update()
+        
+        if frame_count % 20 == 0:
+            accel *= 2
         
     pygame.quit()
 
