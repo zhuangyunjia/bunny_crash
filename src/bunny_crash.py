@@ -19,7 +19,9 @@ font = pygame.font.Font('freesansbold.ttf', 16)
 # graphics
 # player 80, 80
 stone_image = pygame.image.load(os.path.join('stone.jpg')) #75, 130
+bunny_image = pygame.image.load(os.path.join('bun.png')) #65, 120
 background = (153, 204, 255)
+back = pygame.image.load(os.path.join('easter.jpg')) 
 #stone_image = pygame.transform.scale(stone, 0 , (75,90))
 
 LEFT_x, LEFT_y = 0,0 #1
@@ -62,7 +64,7 @@ def main(high_score):
     framerate = 60
     frame_count = 0
     
-    chicken = pygame.Rect((290, 504, 80, 80))
+    chicken = pygame.Rect((290, 504, 65, 120))
     
     BLOCK0 = pygame.Rect(0, -10, 75, 130)
     BLOCK1 = pygame.Rect(0, -300, 75, 130)
@@ -75,7 +77,7 @@ def main(high_score):
         clock.tick(framerate)
         
         WIN.fill(background)
-        
+        WIN.blit(back, (0, 0))
         WIN.blit(stone_image, (BLOCK0.x, BLOCK0.y))
         WIN.blit(stone_image, (BLOCK1.x, BLOCK1.y))
         WIN.blit(stone_image, (BLOCK2.x, BLOCK2.y))
@@ -83,6 +85,7 @@ def main(high_score):
         
         # player
         pygame.draw.rect(WIN, (0, 250, 200), chicken)
+        WIN.blit(bunny_image, (chicken.x, chicken.y))
         press = pygame.key.get_pressed()
         
         # score
